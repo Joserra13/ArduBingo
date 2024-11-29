@@ -92,7 +92,6 @@ void getNumber() {
 
 void seeList() {
 
-  // The additional white space is intentional to make things legible and look nice.
   String message;
   int ii = 0;
   int strLength;
@@ -109,12 +108,13 @@ void seeList() {
   lcd.home();
 
   while(1){
+
+    //Credits for this workaround to https://github.com/build2master/arduino-lcd-scroll-long-text/tree/master
     lcd.home();
 
     // Get 16 characters so that we can display on the LCD
     toShow = message.substring(ii,ii+16);
     
-    // print the number of seconds since reset:
     lcd.print(toShow);
 
     ii = ii + 2;
