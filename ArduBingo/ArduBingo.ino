@@ -2,7 +2,7 @@
 *               THE BINGO GAME
 **********************************************/
 
-//Librerías----------------------------------
+//Libraries----------------------------------
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -20,62 +20,64 @@ LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 void setup()
 {
   //Pin config
-  pinMode(BTN1, INPUT_PULLUP);  //Saca bola o avanza en la lista
-  pinMode(BTN2, INPUT_PULLUP);  //Ver lista completa de bolas que han salido o salir de ahí
+  pinMode(BTN1, INPUT_PULLUP);  //Get next number OR see next one in the list
+  pinMode(BTN2, INPUT_PULLUP);  //See full list of selected number until now OR exit the list view
   
   //Set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
   
   //Print a message to the LCD.
-  lcd.print("Bienvenido    al");
+  lcd.print("Welcome  to  the");
   lcd.setCursor(5, 1);
   lcd.print("BINGO!");
   
-  //srand(time(NULL));
-  randomSeed(analogRead(0)); // Con un pin que cuadre
+  randomSeed(analogRead(0)); // Get the seed from an analog input -> Random each time
 }
 
-  int bola;
+  int ball;
 
 void loop()
 { 
   int i = 0;
-  int lista[90];  // acceso a lista[0] hasta lista[89]
-  int vacios = 90;
+  int list[90];
+  int empties = 90;
   
   lcd.clear();
   
   for(i = 0; i <= 90; i++)
   {
-    lista[i] = 0;   
+    list[i] = 0;   
   } 
 
-  while(vacios > 0)
+  while(empties > 0)
   {               
     /*
-     * Genera un numero aleatorio entre 0 y 89.
-     * Si el numero ya ha salido (ya aparece en la lista), genera un nuevo numero
-     */
+    * Generate a random number between 0 and 89.
+    * If the number has already been drawn (already appears in the list), generate a new number.
+    */
+
     do
     {
-        bola = random(90); // Genera un numero desde 0 a 89
-    } while(lista[bola] != 0);
+        ball = random(90); // Generates a number from 0 to 89
+    } while(list[ball] != 0);
 
-    vacios--;
+    empties--;
     
     /*
-    Como los numeros aleatorios son entre 0 y 89 y los queremos entre 1 y 90, guardamos bola + 1
-    Si generamos directamente un numero entre 1 y 90 y lo usamos para indexar el vector,
-    el problema es cuando salga el numero 90 y trates de indexar el lista[90], porque que es una posicion
-    de memoria a la que no tienes acceso, tu vector tiene 90 posiciones: del 0 al 89.
+    * Since the random numbers are between 0 and 89 and we want them between 1 and 90, we store ball + 1.
+    * If we directly generate a number between 1 and 90 and use it to index the array,
+    * the problem arises when the number 90 is generated, and you try to index list[90],
+    * as this is a memory location you don't have access to. 
+    * Your array has 90 positions: from 0 to 89.
     */
-    lista[bola] = bola + 1;
+
+    list[ball] = ball + 1;
 
     lcd.clear();
     // set the cursor to column 0, line 0
     lcd.setCursor(0,0);
     lcd.print("Numero: ");
-    lcd.print(lista[bola]); // Cambiado a lista[bola] en lugar de bola
+    lcd.print(list[ball]); // Changed to list[ball] instead of ball
     lcd.setCursor(0,1);
     lcd.print("1:Next    2:List");
     
@@ -86,17 +88,17 @@ void loop()
     {      
       if(digitalRead(BTN2) == LOW)
       {
-        // for(i = 1; i < 91; i++) // Esto puede dar problemas, porque no tienes acceso a lista[90]
+        // for(i = 1; i < 91; i++) // This can cause problems because you don't have access to list[90]
         for(i = 0; i < 90; i++)
         {
           lcd.clear();
           lcd.setCursor(0,0);
-          lcd.print("Lista[");
+          lcd.print("list[");
           lcd.print(i);
           lcd.print("] = ");
-          lcd.print(lista[i]);
+          lcd.print(list[i]);
 
-          if(lista[i] != 0)
+          if(list[i] != 0)
           {
             delay(500);
           }
@@ -116,7 +118,7 @@ void loop()
   
   lcd.clear();
   lcd.setCursor(0,1);
-  lcd.print("YA SALIERON TODOS");  
+  lcd.print("   GAME   OVER   ");
 
   while(digitalRead(BTN1) == HIGH)
   {
@@ -125,5 +127,4 @@ void loop()
 
   delay(2000);
 
-  
 }
