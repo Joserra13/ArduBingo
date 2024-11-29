@@ -1,5 +1,5 @@
 /**********************************************
-*               THE BINGO GAME
+*                   ARDUBINGO
 **********************************************/
 
 //Libraries----------------------------------
@@ -60,6 +60,17 @@ void setListFlag(){
   seeListFlag = true;
 }
 
+void initiateScreen(){
+  //Now, let's print the value in the lcd
+  lcd.clear();
+  // set the cursor to column 0, line 0
+  lcd.setCursor(0, 0);
+  lcd.print("Numero: ");
+  lcd.print(list[ball]);
+  lcd.setCursor(0, 1);
+  lcd.print("1:Next    2:List");
+}
+
 void getNumber() {
   /*
     * Generate a random number between 1 and 90.
@@ -76,50 +87,42 @@ void getNumber() {
   empties--;
   list[ball] = ball;
 
-  //Now, let's print the value in the lcd
-  lcd.clear();
-  // set the cursor to column 0, line 0
-  lcd.setCursor(0, 0);
-  lcd.print("Numero: ");
-  lcd.print(list[ball]);
-  lcd.setCursor(0, 1);
-  lcd.print("1:Next    2:List");
+  initiateScreen();
 }
 
 void seeList() {
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Current numbers:");
+
+  lcd.setCursor(0, 16);
+
+  // Print the numbers as a string
+  String displayText = "";
+
+  int len = 0;
+
+  // Convert each number to string and append to displayText
   for (int i = 1; i < N; i++) {
-
-    //Print to LCD
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("list[");
-    lcd.print(i);
-    lcd.print("] = ");
-    lcd.print(list[i]);
-
-    //Print to Serial Monitor
-    Serial.print("list[");
-    Serial.print(i);
-    Serial.print("] = ");
-    Serial.print(list[i]);
-    Serial.println();
-
-    if (list[i] != 0) {
-      delay(700);
-    } else {
-      delay(250);
-    }
-
-    if (digitalRead(BTN1) == LOW) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Numero: ");
-      lcd.print(list[ball]);
-      lcd.setCursor(0, 1);
-      lcd.print("1:Next    2:List");
-      break;
-    }
+    if(list[i] != 0){
+      displayText += String(list[i]) + " ";  // Add a space between numbers
+      len = len + 2;
+    }    
   }
+
+  // Print the full string on the LCD
+  lcd.print(displayText);
+  delay(1000);
+
+  for (int positionCounter = 0; positionCounter < len; positionCounter++) {
+    // scroll one position left:
+    lcd.scrollDisplayLeft();
+    // wait a bit:
+    delay(300);
+  }
+
+  initiateScreen();
 }
 
 void loop() {
@@ -134,7 +137,8 @@ void loop() {
 
       getNumber();
       getNumberFlag = false;
-    } else if(seeListFlag){
+    }
+    if(seeListFlag){
 
       seeList();
       seeListFlag = false;
