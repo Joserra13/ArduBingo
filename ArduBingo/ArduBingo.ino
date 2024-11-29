@@ -65,7 +65,7 @@ void initiateScreen() {
   lcd.clear();
   // set the cursor to column 0, line 0
   lcd.setCursor(0, 0);
-  lcd.print("Numero: ");
+  lcd.print("Number: ");
   lcd.print(list[ball]);
   lcd.setCursor(0, 1);
   lcd.print("1:Next    2:List");
@@ -157,9 +157,9 @@ void loop() {
 
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("      GAME       ");
+  lcd.print("  xX  GAME  Xx  ");
   lcd.setCursor(0, 1);
-  lcd.print("      OVER       ");
+  lcd.print("  xX  OVER  Xx  ");
 
   while (digitalRead(BTN1) == HIGH) {
     lcd.blink();
