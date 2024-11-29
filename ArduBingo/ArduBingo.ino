@@ -52,15 +52,15 @@ void setup() {
   list[0] = 999;
 }
 
-void setNumberFlag(){
+void setNumberFlag() {
   getNumberFlag = true;
 }
 
-void setListFlag(){
+void setListFlag() {
   seeListFlag = true;
 }
 
-void initiateScreen(){
+void initiateScreen() {
   //Now, let's print the value in the lcd
   lcd.clear();
   // set the cursor to column 0, line 0
@@ -92,35 +92,43 @@ void getNumber() {
 
 void seeList() {
 
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Current numbers:");
+  // The additional white space is intentional to make things legible and look nice.
+  String message;
+  int ii = 0;
+  int strLength;
+  String toShow;
 
-  lcd.setCursor(0, 16);
-
-  // Print the numbers as a string
-  String displayText = "";
-
-  int len = 0;
-
-  // Convert each number to string and append to displayText
-  for (int i = 1; i < N; i++) {
+  for(int i = 1; i < N; i++){
     if(list[i] != 0){
-      displayText += String(list[i]) + " ";  // Add a space between numbers
-      len = len + 2;
-    }    
+      message += String(list[i]) + " ";
+    }
   }
 
-  // Print the full string on the LCD
-  lcd.print(displayText);
+  strLength = message.length();
+  lcd.clear();
+  lcd.home();
+
+  while(1){
+    lcd.home();
+
+    // Get 16 characters so that we can display on the LCD
+    toShow = message.substring(ii,ii+16);
+    
+    // print the number of seconds since reset:
+    lcd.print(toShow);
+
+    ii = ii + 2;
+
+    delay(500);
+
+    // We have to reset ii after there is less text displayed.
+    if(ii>(strLength-16)) {
+      ii = 0;
+      break;
+    }
+  }
+
   delay(1000);
-
-  for (int positionCounter = 0; positionCounter < len; positionCounter++) {
-    // scroll one position left:
-    lcd.scrollDisplayLeft();
-    // wait a bit:
-    delay(300);
-  }
 
   initiateScreen();
 }
@@ -133,12 +141,12 @@ void loop() {
 
   while (empties > 0) {
 
-    if(getNumberFlag){
+    if (getNumberFlag) {
 
       getNumber();
       getNumberFlag = false;
     }
-    if(seeListFlag){
+    if (seeListFlag) {
 
       seeList();
       seeListFlag = false;
