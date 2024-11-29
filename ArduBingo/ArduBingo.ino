@@ -19,7 +19,7 @@ LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 
 //Global Variables
 int list[N];
-int empties = N - 1;
+int empties;
 int ball;
 int getNumberFlag = false;
 int seeListFlag = false;
@@ -119,7 +119,7 @@ void seeList() {
 
     ii = ii + 2;
 
-    delay(500);
+    delay(400);
 
     // We have to reset ii after there is less text displayed.
     if(ii>(strLength-16)) {
@@ -128,7 +128,7 @@ void seeList() {
     }
   }
 
-  delay(1000);
+  delay(750);
 
   initiateScreen();
 }
@@ -138,6 +138,8 @@ void loop() {
   for (int i = 1; i < N; i++) {
     list[i] = 0;
   }
+
+  empties = N - 1;
 
   while (empties > 0) {
 
